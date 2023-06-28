@@ -16,20 +16,20 @@ vim.g.maplocalleader = ' '
 
 require("lazy").setup({
     {
-        'rose-pine/neovim',
-        name = 'rose-pine',
-        lazy = false,
+        "catppuccin/nvim",
+        name = "catppuccin",
         priority = 1000,
         config = function()
-            require('rose-pine').setup({
-                disable_background = true
+            require('catppuccin').setup({
+                transparent_background = true,
+                no_italic = true,             -- Force no italic
+                no_bold = true,               -- Force no bold
             })
-            vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-            vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-            vim.cmd("colorscheme rose-pine") -- vim.cmd.colorscheme('gruvbox')
+            vim.cmd("colorscheme catppuccin") -- vim.cmd.colorscheme('gruvbox')
             vim.o.background = "dark"
         end,
     },
+
     -- {
     --     "folke/tokyonight.nvim",
     --     lazy = false,
@@ -50,6 +50,51 @@ require("lazy").setup({
     --         vim.cmd("colorscheme tokyonight") -- vim.cmd.colorscheme('gruvbox')
     --     end,
     -- },
+
+    {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        opts = {},
+        keys = {
+            {
+                "s",
+                mode = { "n", "x", "o" },
+                function()
+                    -- default options: exact mode, multi window, all directions, with a backdrop
+                    require("flash").jump()
+                end,
+                desc = "Flash",
+            },
+            {
+                "S",
+                mode = { "n", "o", "x" },
+                function()
+                    -- show labeled treesitter nodes around the cursor
+                    require("flash").treesitter()
+                end,
+                desc = "Flash Treesitter",
+            },
+            {
+                "r",
+                mode = "o",
+                function()
+                    -- jump to a remote location to execute the operator
+                    require("flash").remote()
+                end,
+                desc = "Remote Flash",
+            },
+            {
+                "R",
+                mode = { "n", "o", "x" },
+                function()
+                    -- show labeled treesitter nodes around the search matches
+                    require("flash").treesitter_search()
+                end,
+                desc = "Treesitter Search",
+            }
+        },
+    },
+
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.1',
@@ -140,6 +185,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.keymap.set("n", "<leader>ee", vim.cmd.Ex)
+vim.keymap.set("n", "<leader>ew", "<cmd>Vex<CR>")
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")

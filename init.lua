@@ -16,19 +16,31 @@ vim.g.maplocalleader = ' '
 
 require("lazy").setup({
     {
-        "catppuccin/nvim",
-        name = "catppuccin",
+        'sainnhe/gruvbox-material',
         priority = 1000,
-        config = function()
-            require('catppuccin').setup({
-                transparent_background = true,
-                no_italic = true,             -- Force no italic
-                no_bold = true,               -- Force no bold
-            })
-            vim.cmd("colorscheme catppuccin") -- vim.cmd.colorscheme('gruvbox')
+        init = function()
+            vim.g.gruvbox_material_disable_italic_comment = 1
+            vim.g.gruvbox_material_transparent_background = 1
+            vim.g.gruvbox_material_dim_inactive_windows = 1
+            vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
             vim.o.background = "dark"
         end,
     },
+
+    -- {
+    --     "catppuccin/nvim",
+    --     name = "catppuccin",
+    --     priority = 1000,
+    --     config = function()
+    --         require('catppuccin').setup({
+    --             transparent_background = true,
+    --             no_italic = true,             -- Force no italic
+    --             no_bold = true,               -- Force no bold
+    --         })
+    --         vim.cmd("colorscheme catppuccin") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.o.background = "dark"
+    --     end,
+    -- },
 
     -- {
     --     "folke/tokyonight.nvim",

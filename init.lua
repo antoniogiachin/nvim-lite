@@ -445,6 +445,7 @@ vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
 -- end)
 vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
 vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, {})
+vim.keymap.set('n', '<leader>xq', builtin.diagnostics, {})
 
 -- TREESITTER
 require 'nvim-treesitter.configs'.setup {
@@ -471,8 +472,8 @@ require 'nvim-treesitter.configs'.setup {
 }
 
 -- TROUBLE
-vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
-    { silent = true, noremap = true }
-)
+-- vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>",
+--     { silent = true, noremap = true }
+-- )
 -- UNDOTREE
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)

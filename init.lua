@@ -107,6 +107,14 @@ require("lazy").setup({
         },
     },
 
+    -- Prettier
+    {
+        "MunifTanjim/prettier.nvim",
+        dependencies = {
+            { "jose-elias-alvarez/null-ls.nvim" },
+        },
+    },
+
     {
         'nvim-telescope/telescope.nvim',
         tag = '0.1.1',
@@ -118,6 +126,9 @@ require("lazy").setup({
         opts = {
             icons = false,
         },
+        config = function()
+            require("trouble").setup()
+        end,
     },
 
     {
@@ -220,6 +231,9 @@ vim.keymap.set({ "n", "v" }, "<leader>d", [["_d]])
 vim.keymap.set("n", "Q", "<nop>")
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>f", vim.lsp.buf.format)
+
+-- Prettier
+vim.keymap.set("n", "<leader>P", "<cmd>Prettier<CR>")
 
 vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")

@@ -15,6 +15,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
+
     {
         'sainnhe/gruvbox-material',
         priority = 1000,
@@ -319,11 +320,11 @@ vim.opt.colorcolumn = "80"
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
 -- FUGITIVE
-local ThePrimeagen_Fugitive = vim.api.nvim_create_augroup("ThePrimeagen_Fugitive", {})
+local tony_fugitive = vim.api.nvim_create_augroup("tony_fugitive", {})
 
 local autocmd = vim.api.nvim_create_autocmd
 autocmd("BufWinEnter", {
-    group = ThePrimeagen_Fugitive,
+    group = tony_fugitive,
     pattern = "*",
     callback = function()
         if vim.bo.ft ~= "fugitive" then

@@ -34,7 +34,7 @@ require("lazy").setup({
         config = function()
             require('rose-pine').setup({
                 disable_background = true,
-                disable_float_background = true,
+                -- disable_float_background = true,
                 disable_italics = true,      -- Force no bold
             })
             vim.cmd("colorscheme rose-pine") -- vim.cmd.colorscheme('gruvbox')

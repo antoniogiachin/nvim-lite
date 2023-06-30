@@ -15,7 +15,6 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
-
     {
         'sainnhe/gruvbox-material',
         priority = 1000,
@@ -316,6 +315,12 @@ vim.opt.isfname:append("@-@")
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
+vim.cmd [[
+    augroup tony_colorcolumn
+        autocmd!
+        autocmd BufEnter * highlight ColorColumn ctermbg=235 guibg=#363636
+    augroup END
+]]
 
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 

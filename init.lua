@@ -15,14 +15,29 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
+    -- {
+    --     'sainnhe/gruvbox-material',
+    --     priority = 1000,
+    --     init = function()
+    --         vim.g.gruvbox_material_disable_italic_comment = 1
+    --         vim.g.gruvbox_material_transparent_background = 1
+    --         vim.g.gruvbox_material_dim_inactive_windows = 1
+    --         vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.o.background = "dark"
+    --     end,
+    -- },
+
     {
-        'sainnhe/gruvbox-material',
+        'rose-pine/neovim',
+        name = 'rose-pine',
         priority = 1000,
-        init = function()
-            vim.g.gruvbox_material_disable_italic_comment = 1
-            vim.g.gruvbox_material_transparent_background = 1
-            vim.g.gruvbox_material_dim_inactive_windows = 1
-            vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
+        config = function()
+            require('rose-pine').setup({
+                disable_background = true,
+                disable_float_background = true,
+                disable_italics = true,      -- Force no bold
+            })
+            vim.cmd("colorscheme rose-pine") -- vim.cmd.colorscheme('gruvbox')
             vim.o.background = "dark"
         end,
     },

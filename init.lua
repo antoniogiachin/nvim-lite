@@ -20,44 +20,42 @@ require("lazy").setup({
     --     priority = 1000,
     --     init = function()
     --         require('gruvbox').setup({
-    --             undercurl = true,
-    --             underline = true,
-    --             bold = false,
     --             italic = {
     --                 strings = false,
     --                 comments = false,
     --                 operators = false,
     --                 folds = false,
     --             },
-    --             strikethrough = true,
     --             transparent_mode = true,
     --         })
     --         vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
     --         vim.o.background = "dark"
     --     end
     -- },
-    {
-        "luisiacc/gruvbox-baby",
-        priority = 1000,
-        init = function()
-            vim.g.gruvbox_baby_transparent_mode = 1
-            vim.g.gruvbox_baby_comment_style = "NONE"
-            vim.g.gruvbox_baby_keyword_style = "NONE"
-            vim.cmd("colorscheme gruvbox-baby") -- vim.cmd.colorscheme('gruvbox')
-            vim.o.background = "dark"
-        end,
-    },
+    --
     -- {
-    --     'sainnhe/gruvbox-material',
+    --     "luisiacc/gruvbox-baby",
     --     priority = 1000,
     --     init = function()
-    --         vim.g.gruvbox_material_disable_italic_comment = 1
-    --         vim.g.gruvbox_material_transparent_background = 1
-    --         vim.g.gruvbox_material_dim_inactive_windows = 1
-    --         vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.g.gruvbox_baby_transparent_mode = 1
+    --         vim.g.gruvbox_baby_comment_style = "NONE"
+    --         vim.g.gruvbox_baby_keyword_style = "NONE"
+    --         vim.cmd("colorscheme gruvbox-baby") -- vim.cmd.colorscheme('gruvbox')
     --         vim.o.background = "dark"
     --     end,
     -- },
+    --
+    {
+        'sainnhe/gruvbox-material',
+        priority = 1000,
+        init = function()
+            vim.g.gruvbox_material_disable_italic_comment = 1
+            vim.g.gruvbox_material_transparent_background = 1
+            -- vim.g.gruvbox_material_dim_inactive_windows = 1
+            vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
+            vim.o.background = "dark"
+        end,
+    },
 
     -- {
     --     'rose-pine/neovim',

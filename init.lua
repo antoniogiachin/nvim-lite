@@ -16,6 +16,38 @@ vim.g.maplocalleader = ' '
 
 require("lazy").setup({
     -- {
+    --     "ellisonleao/gruvbox.nvim",
+    --     priority = 1000,
+    --     init = function()
+    --         require('gruvbox').setup({
+    --             undercurl = true,
+    --             underline = true,
+    --             bold = false,
+    --             italic = {
+    --                 strings = false,
+    --                 comments = false,
+    --                 operators = false,
+    --                 folds = false,
+    --             },
+    --             strikethrough = true,
+    --             transparent_mode = true,
+    --         })
+    --         vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.o.background = "dark"
+    --     end
+    -- },
+    {
+        "luisiacc/gruvbox-baby",
+        priority = 1000,
+        init = function()
+            vim.g.gruvbox_baby_transparent_mode = 1
+            vim.g.gruvbox_baby_comment_style = "NONE"
+            vim.g.gruvbox_baby_keyword_style = "NONE"
+            vim.cmd("colorscheme gruvbox-baby") -- vim.cmd.colorscheme('gruvbox')
+            vim.o.background = "dark"
+        end,
+    },
+    -- {
     --     'sainnhe/gruvbox-material',
     --     priority = 1000,
     --     init = function()
@@ -27,20 +59,20 @@ require("lazy").setup({
     --     end,
     -- },
 
-    {
-        'rose-pine/neovim',
-        name = 'rose-pine',
-        priority = 1000,
-        config = function()
-            require('rose-pine').setup({
-                disable_background = true,
-                -- disable_float_background = true,
-                disable_italics = true,      -- Force no bold
-            })
-            vim.cmd("colorscheme rose-pine") -- vim.cmd.colorscheme('gruvbox')
-            vim.o.background = "dark"
-        end,
-    },
+    -- {
+    --     'rose-pine/neovim',
+    --     name = 'rose-pine',
+    --     priority = 1000,
+    --     config = function()
+    --         require('rose-pine').setup({
+    --             disable_background = true,
+    --             -- disable_float_background = true,
+    --             disable_italics = true,      -- Force no bold
+    --         })
+    --         vim.cmd("colorscheme rose-pine") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.o.background = "dark"
+    --     end,
+    -- },
 
     -- {
     --     "catppuccin/nvim",

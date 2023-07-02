@@ -221,11 +221,16 @@ require("lazy").setup({
 
     {
         'VonHeikemen/lsp-zero.nvim',
-        branch = 'v1.x',
+        branch = 'v2.x',
         dependencies = {
             -- LSP Support
             { 'neovim/nvim-lspconfig' },
-            { 'williamboman/mason.nvim' },
+            {
+                'williamboman/mason.nvim',
+                build = function()
+                    pcall(vim.cmd, 'MasonUpdate')
+                end,
+            },
             { 'williamboman/mason-lspconfig.nvim' },
 
             -- Autocompletion
@@ -241,6 +246,7 @@ require("lazy").setup({
             { 'rafamadriz/friendly-snippets' },
         }
     },
+
     {
         "kdheepak/lazygit.nvim",
         -- optional for floating window border decoration
@@ -251,8 +257,7 @@ require("lazy").setup({
 
     "eandrju/cellular-automaton.nvim",
 
-    require 'custom.plugins',
-
+    -- require 'custom.plugins',
 })
 
 -- [[ Highlight on yank ]]
@@ -415,52 +420,7 @@ vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
 
 -- LSP
 
-local lsp = require("lsp-zero")
-
-lsp.preset("recommended")
-
-lsp.ensure_installed({
-    'tsserver',
-    'rust_analyzer',
-})
-
--- Fix Undefined global 'vim'
-lsp.configure('lua-language-server', {
-    settings = {
-        Lua = {
-            diagnostics = {
-                globals = { 'vim' }
-            }
-        }
-    }
-})
-
-
-local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
-})
-
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
-
-lsp.setup_nvim_cmp({
-    mapping = cmp_mappings,
-})
-
-lsp.set_preferences({
-    suggest_lsp_servers = false,
-    sign_icons = {
-        error = 'E',
-        warn = 'W',
-        hint = 'H',
-        info = 'I'
-    }
-})
+local lsp = require("lsp-zero").preset({})
 
 lsp.on_attach(function(client, bufnr)
     local opts = { buffer = bufnr, remap = false }
@@ -477,10 +437,85 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
 end)
 
+lsp.ensure_installed({
+    -- Replace these with whatever servers you want to install
+    'tsserver',
+    'eslint',
+    'rust_analyzer'
+})
+
+require('lspconfig').tsserver.setup({
+    on_init = function(client)
+        client.server_capabilities.documentFormattingProvider = false
+        client.server_capabilities.documentFormattingRangeProvider = false
+    end,
+})
+
+-- -- Fix Undefined global 'vim'
+lsp.configure('lua_ls', {
+    settings = {
+        Lua = {
+            diagnostics = {
+                globals = { 'vim' }
+            }
+        }
+    }
+})
+
+-- EsLint as a formatter
+require('lspconfig').eslint.setup({
+    on_init = function(client)
+        client.server_capabilities.documentFormattingProvider = true
+        client.server_capabilities.documentFormattingRangeProvider = true
+    end,
+})
+
+lsp.set_preferences({
+    suggest_lsp_servers = false,
+    sign_icons = {
+        error = 'E',
+        warn = 'W',
+        hint = 'H',
+        info = 'I'
+    }
+})
+
+lsp.format_on_save({
+    format_opts = {
+        async = false,
+        timeout_ms = 10000,
+    },
+    servers = {
+        ['lua_ls'] = { 'lua' },
+        ['rust_analyzer'] = { 'rust' },
+        ['eslint'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+        -- if you have a working setup with null-ls
+        -- you can specify filetypes it can format.
+        -- ['null-ls'] = {'javascript', 'typescript'},
+    }
+})
+
 lsp.setup()
 
-vim.diagnostic.config({
-    virtual_text = true
+-- vim.diagnostic.config({
+--     virtual_text = true
+-- })
+--
+
+local cmp = require('cmp')
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_mappings = lsp.defaults.cmp_mappings({
+    ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+    ["<C-Space>"] = cmp.mapping.complete(),
+})
+
+cmp_mappings['<Tab>'] = nil
+cmp_mappings['<S-Tab>'] = nil
+
+lsp.setup_nvim_cmp({
+    mapping = cmp_mappings,
 })
 
 -- TELESCOPE

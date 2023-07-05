@@ -15,23 +15,23 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
-    {
-        "ellisonleao/gruvbox.nvim",
-        priority = 1000,
-        init = function()
-            require('gruvbox').setup({
-                italic = {
-                    strings = false,
-                    comments = false,
-                    operators = false,
-                    folds = false,
-                },
-                transparent_mode = true,
-            })
-            vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
-            vim.o.background = "dark"
-        end
-    },
+    -- {
+    --     "ellisonleao/gruvbox.nvim",
+    --     priority = 1000,
+    --     init = function()
+    --         require('gruvbox').setup({
+    --             italic = {
+    --                 strings = false,
+    --                 comments = false,
+    --                 operators = false,
+    --                 folds = false,
+    --             },
+    --             transparent_mode = true,
+    --         })
+    --         vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
+    --         vim.o.background = "dark"
+    --     end
+    -- },
     --
     -- {
     --     "bluz71/vim-moonfly-colors",
@@ -121,26 +121,26 @@ require("lazy").setup({
     --     end,
     -- },
 
-    -- {
-    --     "folke/tokyonight.nvim",
-    --     lazy = false,
-    --     priority = 1000,
-    --     config = function()
-    --         require("tokyonight").setup({
-    --             transparent = true,
-    --             styles = {
-    --                 sidebars = "transparent",
-    --                 floats = "transparent",
-    --                 comments = { italic = false },
-    --                 keywords = { italic = false },
-    --                 functions = { italic = false },
-    --                 variables = { italic = false },
-    --             },
-    --         })
-    --         vim.o.background = "dark"
-    --         vim.cmd("colorscheme tokyonight") -- vim.cmd.colorscheme('gruvbox')
-    --     end,
-    -- },
+    {
+        "folke/tokyonight.nvim",
+        lazy = false,
+        priority = 1000,
+        config = function()
+            require("tokyonight").setup({
+                transparent = true,
+                styles = {
+                    sidebars = "transparent",
+                    floats = "transparent",
+                    comments = { italic = false },
+                    keywords = { italic = false },
+                    functions = { italic = false },
+                    variables = { italic = false },
+                },
+            })
+            vim.o.background = "dark"
+            vim.cmd("colorscheme tokyonight") -- vim.cmd.colorscheme('gruvbox')
+        end,
+    },
 
     {
         "folke/flash.nvim",

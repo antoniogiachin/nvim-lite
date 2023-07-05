@@ -15,23 +15,35 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
+    {
+        "ellisonleao/gruvbox.nvim",
+        priority = 1000,
+        init = function()
+            require('gruvbox').setup({
+                italic = {
+                    strings = false,
+                    comments = false,
+                    operators = false,
+                    folds = false,
+                },
+                transparent_mode = true,
+            })
+            vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
+            vim.o.background = "dark"
+        end
+    },
+    --
     -- {
-    --     "ellisonleao/gruvbox.nvim",
+    --     "bluz71/vim-moonfly-colors",
+    --     name = "moonfly",
+    --     lazy = false,
     --     priority = 1000,
     --     init = function()
-    --         require('gruvbox').setup({
-    --             italic = {
-    --                 strings = false,
-    --                 comments = false,
-    --                 operators = false,
-    --                 folds = false,
-    --             },
-    --             transparent_mode = true,
-    --         })
-    --         vim.cmd("colorscheme gruvbox") -- vim.cmd.colorscheme('gruvbox')
-    --         vim.o.background = "dark"
-    --     end
+    --         vim.g.moonflyItalics = false
+    --         vim.cmd("colorscheme moonfly") -- vim.cmd.colorscheme('gruvbox')
+    --     end,
     -- },
+
     --
     -- {
     --     "luisiacc/gruvbox-baby",
@@ -44,18 +56,40 @@ require("lazy").setup({
     --         vim.o.background = "dark"
     --     end,
     -- },
+
+
+    -- {
+    --     'sainnhe/gruvbox-material',
+    --     priority = 1000,
+    --     init = function()
+    --         vim.g.gruvbox_material_disable_italic_comment = 1
+    --         vim.g.gruvbox_material_diagnostic_text_highlight = 1
+    --         vim.g.gruvbox_material_diagnostic_line_highlight = 1
+    --         vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
+    --         -- vim.g.gruvbox_material_transparent_background = 1
+    --         vim.g.gruvbox_material_background = 'hard'
+    --         -- vim.g.gruvbox_material_dim_inactive_windows = 1
+    --         vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
+    --         -- vim.o.background = "dark"
+    --     end,
+    -- },
     --
-    {
-        'sainnhe/gruvbox-material',
-        priority = 1000,
-        init = function()
-            vim.g.gruvbox_material_disable_italic_comment = 1
-            vim.g.gruvbox_material_transparent_background = 1
-            -- vim.g.gruvbox_material_dim_inactive_windows = 1
-            vim.cmd("colorscheme gruvbox-material") -- vim.cmd.colorscheme('gruvbox')
-            vim.o.background = "dark"
-        end,
-    },
+    -- {
+    --     "blazkowolf/gruber-darker.nvim",
+    --     priority = 1000,
+    --     opts = {
+    --         italic = {
+    --             strings = false,
+    --             comments = false,
+    --             operators = false,
+    --             folds = false,
+    --         },
+    --     },
+    --     init = function()
+    --         vim.cmd("colorscheme gruber-darker") -- vim.cmd.colorscheme('gruvbox')
+    --     end,
+    -- },
+
 
     -- {
     --     'rose-pine/neovim',
@@ -526,6 +560,7 @@ pcall(require('telescope').load_extension, 'fzf')
 vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
 vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
+vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
 -- vim.keymap.set('n', '<leader>sg', function()
 --     builtin.grep_string({ search = vim.fn.input("Grep > ") })
 -- end)

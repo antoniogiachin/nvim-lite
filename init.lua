@@ -179,12 +179,12 @@ require("lazy").setup({
   },
 
   -- Better Escape
-  {
-    "max397574/better-escape.nvim",
-    config = function()
-      require("better_escape").setup()
-    end,
-  },
+  -- {
+  --   "max397574/better-escape.nvim",
+  --   config = function()
+  --     require("better_escape").setup()
+  --   end,
+  -- },
 
   -- Prettier
   {
@@ -194,11 +194,28 @@ require("lazy").setup({
     },
   },
 
+  -- TELESCOPE
   {
     'nvim-telescope/telescope.nvim',
-    tag = '0.1.1',
+    tag = '0.1.2',
     -- or                              , branch = '0.1.1',
-    dependencies = { 'nvim-lua/plenary.nvim' }
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local builtin = require('telescope.builtin')
+      -- Enable telescope fzf native, if installed
+      pcall(require('telescope').load_extension, 'fzf')
+
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
+      vim.keymap.set('n', '<C-p>', builtin.git_files, {})
+      vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
+      vim.keymap.set('n', '<leader>sg', function()
+        builtin.grep_string({ search = vim.fn.input("Grep > ") })
+      end)
+      vim.keymap.set('n', '<leader>ssg', builtin.live_grep, {})
+      vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
+      vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, {})
+      -- vim.keymap.set('n', '<leader>xq', builtin.diagnostics, {})
+    end
   },
 
   -- Fuzzy Finder Algorithm which requires local dependencies to be built.
@@ -254,29 +271,78 @@ require("lazy").setup({
       require('mini.comment').setup()
     end,
   },
-  { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+
+  -- TREESITTER
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require 'nvim-treesitter.configs'.setup {
+        -- A list of parser names, or "all"
+        ensure_installed = { "tsx", "javascript", "typescript", "c", "lua", "rust" },
+
+        -- Install parsers synchronously (only applied to `ensure_installed`)
+        sync_install = false,
+
+        -- Automatically install missing parsers when entering buffer
+        -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
+        auto_install = true,
+
+        highlight = {
+          -- `false` will disable the whole extension
+          enable = true,
+
+          -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+          -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+          -- Using this option may slow down your editor, and you may see some duplicate highlights.
+          -- Instead of true it can also be a list of languages
+          additional_vim_regex_highlighting = false,
+        },
+      }
+    end
+  },
+
   "nvim-treesitter/playground",
-  "theprimeagen/harpoon",
+
+  -- HARPOON
+  {
+    "theprimeagen/harpoon",
+    config = function()
+      local mark = require("harpoon.mark")
+      local ui = require("harpoon.ui")
+
+      vim.keymap.set("n", "<leader>a", mark.add_file)
+      vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
+
+      vim.keymap.set("n", "<C-t>", function() ui.nav_prev() end)
+      vim.keymap.set("n", "<C-h>", function() ui.nav_next() end)
+      -- vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
+      -- vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
+      -- vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
+      -- vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
+    end
+  },
+
   "mbbill/undotree",
   -- "tpope/vim-fugitive",
   "nvim-treesitter/nvim-treesitter-context",
 
+  -- LSP ZERO
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v2.x',
-    dependencies = {
-      -- LSP Support
-      { 'neovim/nvim-lspconfig' },
-      {
-        'williamboman/mason.nvim',
-        build = function()
-          pcall(vim.cmd, 'MasonUpdate')
-        end,
-      },
-      { 'williamboman/mason-lspconfig.nvim' },
+    lazy = true,
+    config = function()
+      local lsp = require("lsp-zero").preset({})
+    end
+  },
 
+  -- CMP / Autocompletion
+  {
+    'hrsh7th/nvim-cmp',
+    event = "InsertEnter",
+    dependencies = {
       -- Autocompletion
-      { 'hrsh7th/nvim-cmp' },
       { 'hrsh7th/cmp-buffer' },
       { 'hrsh7th/cmp-path' },
       { 'saadparwaiz1/cmp_luasnip' },
@@ -286,7 +352,120 @@ require("lazy").setup({
       -- Snippets
       { 'L3MON4D3/LuaSnip' },
       { 'rafamadriz/friendly-snippets' },
-    }
+    },
+    config = function()
+      -- Here is where you configure the autocompletion settings.
+      -- The arguments for .extend() have the same shape as `manage_nvim_cmp`:
+      -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/api-reference.md#manage_nvim_cmp
+
+      require('lsp-zero.cmp').extend()
+
+      -- And you can configure cmp even more, if you want to.
+      local cmp = require('cmp')
+
+      local cmp_select = { behavior = cmp.SelectBehavior.Select }
+      cmp.setup({
+        mapping = {
+          ['<Tab>'] = nil,
+          ['<S-Tab>'] = nil,
+          ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+          ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+          ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+          ["<C-Space>"] = cmp.mapping.complete(),
+        }
+      })
+    end
+  },
+
+  -- LSP
+  {
+    'neovim/nvim-lspconfig',
+    cmd = 'LspInfo',
+    event = { 'BufReadPre', 'BufNewFile' },
+    dependencies = {
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'williamboman/mason-lspconfig.nvim' },
+      { 'williamboman/mason.nvim' },
+    },
+    config = function()
+      local lsp = require("lsp-zero").preset({})
+
+      lsp.on_attach(function(client, bufnr)
+        local opts = { buffer = bufnr, remap = false }
+
+        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+      end)
+
+      lsp.ensure_installed({
+        -- Replace these with whatever servers you want to install
+        'tsserver',
+        'eslint',
+        'rust_analyzer'
+      })
+
+      -- Block formatting for tsserver
+      require('lspconfig').tsserver.setup({
+        on_init = function(client)
+          client.server_capabilities.documentFormattingProvider = false
+          client.server_capabilities.documentFormattingRangeProvider = false
+        end,
+      })
+
+      -- -- Fix Undefined global 'vim'
+      lsp.configure('lua_ls', {
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { 'vim' }
+            }
+          }
+        }
+      })
+
+      -- EsLint as a formatter
+      require('lspconfig').eslint.setup({
+        on_init = function(client)
+          client.server_capabilities.documentFormattingProvider = true
+          client.server_capabilities.documentFormattingRangeProvider = true
+        end,
+      })
+
+      lsp.set_preferences({
+        suggest_lsp_servers = false,
+        sign_icons = {
+          error = 'E',
+          warn = 'W',
+          hint = 'H',
+          info = 'I'
+        }
+      })
+
+      lsp.format_on_save({
+        format_opts = {
+          async = false,
+          timeout_ms = 10000,
+        },
+        servers = {
+          ['lua_ls'] = { 'lua' },
+          ['rust_analyzer'] = { 'rust' },
+          ['eslint'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+          -- if you have a working setup with null-ls
+          -- you can specify filetypes it can format.
+          -- ['null-ls'] = {'javascript', 'typescript'},
+        }
+      })
+
+      lsp.setup()
+    end
   },
 
   {
@@ -471,159 +650,6 @@ end, { silent = true })
 --
 --
 -- })
-
--- HARPOON
-local mark = require("harpoon.mark")
-local ui = require("harpoon.ui")
-
-vim.keymap.set("n", "<leader>a", mark.add_file)
-vim.keymap.set("n", "<C-e>", ui.toggle_quick_menu)
-
-vim.keymap.set("n", "<C-h>", function() ui.nav_file(1) end)
-vim.keymap.set("n", "<C-t>", function() ui.nav_file(2) end)
-vim.keymap.set("n", "<C-n>", function() ui.nav_file(3) end)
-vim.keymap.set("n", "<C-s>", function() ui.nav_file(4) end)
-
-
--- LSP
-
-local lsp = require("lsp-zero").preset({})
-
-lsp.on_attach(function(client, bufnr)
-  local opts = { buffer = bufnr, remap = false }
-
-  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-  vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-  vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-  vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-  vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-  vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-  vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-  vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-  vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-  vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-end)
-
-lsp.ensure_installed({
-  -- Replace these with whatever servers you want to install
-  'tsserver',
-  'eslint',
-  'rust_analyzer'
-})
-
-require('lspconfig').tsserver.setup({
-  on_init = function(client)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentFormattingRangeProvider = false
-  end,
-})
-
--- -- Fix Undefined global 'vim'
-lsp.configure('lua_ls', {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { 'vim' }
-      }
-    }
-  }
-})
-
--- EsLint as a formatter
-require('lspconfig').eslint.setup({
-  on_init = function(client)
-    client.server_capabilities.documentFormattingProvider = true
-    client.server_capabilities.documentFormattingRangeProvider = true
-  end,
-})
-
-lsp.set_preferences({
-  suggest_lsp_servers = false,
-  sign_icons = {
-    error = 'E',
-    warn = 'W',
-    hint = 'H',
-    info = 'I'
-  }
-})
-
-lsp.format_on_save({
-  format_opts = {
-    async = false,
-    timeout_ms = 10000,
-  },
-  servers = {
-    ['lua_ls'] = { 'lua' },
-    ['rust_analyzer'] = { 'rust' },
-    ['eslint'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
-    -- if you have a working setup with null-ls
-    -- you can specify filetypes it can format.
-    -- ['null-ls'] = {'javascript', 'typescript'},
-  }
-})
-
-lsp.setup()
-
--- vim.diagnostic.config({
---     virtual_text = true
--- })
---
-
-local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = lsp.defaults.cmp_mappings({
-  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-  ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-  ["<C-Space>"] = cmp.mapping.complete(),
-})
-
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
-
-lsp.setup_nvim_cmp({
-  mapping = cmp_mappings,
-})
-
--- TELESCOPE
-local builtin = require('telescope.builtin')
--- Enable telescope fzf native, if installed
-pcall(require('telescope').load_extension, 'fzf')
-
-vim.keymap.set('n', '<leader>sf', builtin.find_files, {})
-vim.keymap.set('n', '<C-p>', builtin.git_files, {})
-vim.keymap.set('n', '<leader>sg', builtin.live_grep, {})
-vim.keymap.set('n', '<leader>sb', builtin.buffers, {})
--- vim.keymap.set('n', '<leader>sg', function()
---     builtin.grep_string({ search = vim.fn.input("Grep > ") })
--- end)
-vim.keymap.set('n', '<leader>vh', builtin.help_tags, {})
-vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, {})
--- vim.keymap.set('n', '<leader>xq', builtin.diagnostics, {})
-
--- TREESITTER
-require 'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
-  ensure_installed = { "tsx", "javascript", "typescript", "c", "lua", "rust" },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  auto_install = true,
-
-  highlight = {
-    -- `false` will disable the whole extension
-    enable = true,
-
-    -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-    -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-    -- Using this option may slow down your editor, and you may see some duplicate highlights.
-    -- Instead of true it can also be a list of languages
-    additional_vim_regex_highlighting = false,
-  },
-}
 
 -- TROUBLE
 vim.keymap.set("n", "<leader>tt", "<cmd>TroubleToggle<cr>",

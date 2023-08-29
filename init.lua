@@ -371,7 +371,7 @@ require("lazy").setup({
           ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
           ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
           ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-          ["<C-Space>"] = cmp.mapping.complete(),
+          -- ["<C-Space>"] = cmp.mapping.complete(),
         }
       })
     end
@@ -508,7 +508,8 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.keymap.set("n", "<leader>ee", vim.cmd.Ex)
-vim.keymap.set("n", "<leader>ew", "<cmd>Vex<CR>")
+vim.keymap.set("n", "<leader>ew", "<cmd>vsp<CR>")
+vim.keymap.set("n", "<leader>er", "<cmd>sp<CR>")
 
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")

@@ -40,7 +40,7 @@ require("lazy").setup({
         keywordStyle = { italic = false },
         statementStyle = { bold = true },
         typeStyle = {},
-        transparent = true,    -- do not set background color
+        -- transparent = true,    -- do not set background color
         dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
         terminalColors = true, -- define vim.g.terminal_color_{0,17}
         overrides = function(colors)
@@ -73,7 +73,7 @@ require("lazy").setup({
       })
 
       -- setup must be called before loading
-      vim.cmd("colorscheme kanagawa")
+      vim.cmd [[colorscheme kanagawa]]
     end,
   },
   --
@@ -110,6 +110,7 @@ require("lazy").setup({
   --     vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
   --     vim.g.gruvbox_material_transparent_background = 1
   --     -- vim.g.gruvbox_material_background = 'hard'
+  --     vim.g.gruvbox_material_foreground = 'original'
   --     -- vim.g.gruvbox_material_dim_inactive_windows = 1
   --     vim.cmd("colorscheme gruvbox-material")
   --   end,
@@ -166,6 +167,31 @@ require("lazy").setup({
   --     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
   --     -- vim.o.background = "dark"
   --   end,
+  -- },
+
+  -- TOKYO NIGHT
+  -- {
+  --   "folke/tokyonight.nvim",
+  --   lazy = false,
+  --   priority = 1000,
+  --   opts = {
+  --     style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  --     -- transparent = true, -- Enable this to disable setting the background color
+  --     styles = {
+  --       -- Style to be applied to different syntax groups
+  --       -- Value is any valid attr-list value for `:help nvim_set_hl`
+  --       comments = { italic = false },
+  --       keywords = { italic = false },
+  --       functions = { italic = false },
+  --       variables = { italic = false },
+  --       -- Background styles. Can be "dark", "transparent" or "normal"
+  --       sidebars = "dark", -- style for sidebars, see below
+  --       floats = "dark",   -- style for floating windows
+  --     },
+  --   },
+  --   init = function()
+  --     vim.cmd [[colorscheme tokyonight]]
+  --   end
   -- },
 
   {
@@ -250,7 +276,7 @@ require("lazy").setup({
   },
 
   {
-    "f-person/git-blame.nvim",
+    "tveskag/nvim-blame-line",
   },
   {
     'echasnovski/mini.surround',
@@ -331,18 +357,19 @@ require("lazy").setup({
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v2.x',
-    lazy = true,
-    config = function()
-      local lsp = require("lsp-zero").preset({})
-    end
-  },
-
-  -- CMP / Autocompletion
-  {
-    'hrsh7th/nvim-cmp',
-    event = "InsertEnter",
     dependencies = {
+      -- LSP Support
+      { 'neovim/nvim-lspconfig' },
+      {
+        'williamboman/mason.nvim',
+        build = function()
+          pcall(vim.cmd, 'MasonUpdate')
+        end,
+      },
+      { 'williamboman/mason-lspconfig.nvim' },
+
       -- Autocompletion
+      { 'hrsh7th/nvim-cmp' },
       { 'hrsh7th/cmp-buffer' },
       { 'hrsh7th/cmp-path' },
       { 'saadparwaiz1/cmp_luasnip' },
@@ -352,120 +379,7 @@ require("lazy").setup({
       -- Snippets
       { 'L3MON4D3/LuaSnip' },
       { 'rafamadriz/friendly-snippets' },
-    },
-    config = function()
-      -- Here is where you configure the autocompletion settings.
-      -- The arguments for .extend() have the same shape as `manage_nvim_cmp`:
-      -- https://github.com/VonHeikemen/lsp-zero.nvim/blob/v2.x/doc/md/api-reference.md#manage_nvim_cmp
-
-      require('lsp-zero.cmp').extend()
-
-      -- And you can configure cmp even more, if you want to.
-      local cmp = require('cmp')
-
-      local cmp_select = { behavior = cmp.SelectBehavior.Select }
-      cmp.setup({
-        mapping = {
-          ['<Tab>'] = nil,
-          ['<S-Tab>'] = nil,
-          ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
-          ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
-          ['<C-y>'] = cmp.mapping.confirm({ select = true }),
-          -- ["<C-Space>"] = cmp.mapping.complete(),
-        }
-      })
-    end
-  },
-
-  -- LSP
-  {
-    'neovim/nvim-lspconfig',
-    cmd = 'LspInfo',
-    event = { 'BufReadPre', 'BufNewFile' },
-    dependencies = {
-      { 'hrsh7th/cmp-nvim-lsp' },
-      { 'williamboman/mason-lspconfig.nvim' },
-      { 'williamboman/mason.nvim' },
-    },
-    config = function()
-      local lsp = require("lsp-zero").preset({})
-
-      lsp.on_attach(function(client, bufnr)
-        local opts = { buffer = bufnr, remap = false }
-
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
-        vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
-        vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
-        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-        vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
-        vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
-        vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-      end)
-
-      lsp.ensure_installed({
-        -- Replace these with whatever servers you want to install
-        'tsserver',
-        'eslint',
-        'rust_analyzer'
-      })
-
-      -- Block formatting for tsserver
-      require('lspconfig').tsserver.setup({
-        on_init = function(client)
-          client.server_capabilities.documentFormattingProvider = false
-          client.server_capabilities.documentFormattingRangeProvider = false
-        end,
-      })
-
-      -- -- Fix Undefined global 'vim'
-      lsp.configure('lua_ls', {
-        settings = {
-          Lua = {
-            diagnostics = {
-              globals = { 'vim' }
-            }
-          }
-        }
-      })
-
-      -- EsLint as a formatter
-      require('lspconfig').eslint.setup({
-        on_init = function(client)
-          client.server_capabilities.documentFormattingProvider = true
-          client.server_capabilities.documentFormattingRangeProvider = true
-        end,
-      })
-
-      lsp.set_preferences({
-        suggest_lsp_servers = false,
-        sign_icons = {
-          error = 'E',
-          warn = 'W',
-          hint = 'H',
-          info = 'I'
-        }
-      })
-
-      lsp.format_on_save({
-        format_opts = {
-          async = false,
-          timeout_ms = 10000,
-        },
-        servers = {
-          ['lua_ls'] = { 'lua' },
-          ['rust_analyzer'] = { 'rust' },
-          ['eslint'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
-          -- if you have a working setup with null-ls
-          -- you can specify filetypes it can format.
-          -- ['null-ls'] = {'javascript', 'typescript'},
-        }
-      })
-
-      lsp.setup()
-    end
+    }
   },
 
   {
@@ -621,6 +535,10 @@ vim.cmd [[
 vim.keymap.set("n", "[c", function()
   require("treesitter-context").go_to_context()
 end, { silent = true })
+
+
+-- GIT BLAME
+vim.keymap.set("n", "<leader>gb", "<cmd>ToggleBlameLine<CR>", { desc = "ToggleBlameLine" })
 -- FUGITIVE
 -- local tony_fugitive = vim.api.nvim_create_augroup("tony_fugitive", {})
 --
@@ -668,4 +586,122 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     require('go.format').gofmt()
   end,
   group = format_sync_grp,
+})
+
+
+-- LSP
+
+local lsp = require("lsp-zero").preset({
+  float_border = 'rounded',
+  call_servers = 'local',
+  configure_diagnostics = true,
+  setup_servers_on_start = true,
+  set_lsp_keymaps = {
+    preserve_mappings = false,
+    omit = {},
+  },
+  manage_nvim_cmp = {
+    set_sources = 'recommended',
+    set_basic_mappings = true,
+    set_extra_mappings = false,
+    use_luasnip = true,
+    set_format = true,
+    documentation_window = true,
+  },
+})
+
+lsp.on_attach(function(client, bufnr)
+  local opts = { buffer = bufnr, remap = false }
+
+  vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
+  vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+  vim.keymap.set("n", "<leader>vws", function() vim.lsp.buf.workspace_symbol() end, opts)
+  vim.keymap.set("n", "<leader>vd", function() vim.diagnostic.open_float() end, opts)
+  vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+  vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+  vim.keymap.set("n", "<leader>vca", function() vim.lsp.buf.code_action() end, opts)
+  vim.keymap.set("n", "<leader>vrr", function() vim.lsp.buf.references() end, opts)
+  vim.keymap.set("n", "<leader>vrn", function() vim.lsp.buf.rename() end, opts)
+  vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
+end)
+
+lsp.ensure_installed({
+  -- Replace these with whatever servers you want to install
+  'tsserver',
+  'eslint',
+  'rust_analyzer'
+})
+
+require('lspconfig').tsserver.setup({
+  on_init = function(client)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentFormattingRangeProvider = false
+  end,
+})
+
+-- -- Fix Undefined global 'vim'
+lsp.configure('lua_ls', {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { 'vim' }
+      }
+    }
+  }
+})
+
+-- EsLint as a formatter
+require('lspconfig').eslint.setup({
+  on_init = function(client)
+    client.server_capabilities.documentFormattingProvider = true
+    client.server_capabilities.documentFormattingRangeProvider = true
+  end,
+})
+
+lsp.set_preferences({
+  suggest_lsp_servers = false,
+  sign_icons = {
+    error = 'E',
+    warn = 'W',
+    hint = 'H',
+    info = 'I'
+  }
+})
+
+lsp.format_on_save({
+  format_opts = {
+    async = false,
+    timeout_ms = 10000,
+  },
+  servers = {
+    ['lua_ls'] = { 'lua' },
+    ['rust_analyzer'] = { 'rust' },
+    ['eslint'] = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' },
+    -- if you have a working setup with null-ls
+    -- you can specify filetypes it can format.
+    -- ['null-ls'] = {'javascript', 'typescript'},
+  }
+})
+
+lsp.setup()
+
+-- vim.diagnostic.config({
+--     virtual_text = true
+-- })
+--
+
+local cmp = require('cmp')
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_mappings = lsp.defaults.cmp_mappings({
+  ['<C-p>'] = cmp.mapping.select_prev_item(cmp_select),
+  ['<C-n>'] = cmp.mapping.select_next_item(cmp_select),
+  ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+  ["<C-Space>"] = cmp.mapping.complete(),
+})
+
+cmp_mappings['<Tab>'] = nil
+cmp_mappings['<S-Tab>'] = nil
+
+lsp.setup_nvim_cmp({
+  mapping = cmp_mappings,
 })

@@ -15,74 +15,72 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 require("lazy").setup({
-  -- ZENBURN
+  -- ZENBONES
   -- {
-  --   "phha/zenburn.nvim",
+  --   "mcchrish/zenbones.nvim",
   --   priority = 1000,
   --   lazy = false,
+  --   dependencies = { "rktjmp/lush.nvim" },
   --   init = function()
-  --     vim.cmd("colorscheme zenburn")
-  --   end,
+  --     vim.cmd [[colorscheme zenburned]]
+  --   end
   -- },
 
-  -- KANAGAWA
-  {
-    "rebelot/kanagawa.nvim",
-    priority = 1000,
-    lazy = false,
-    init = function()
-      -- Default options:
-      require('kanagawa').setup({
-        compile = false,  -- enable compiling the colorscheme
-        undercurl = true, -- enable undercurls
-        commentStyle = { italic = false },
-        functionStyle = {},
-        keywordStyle = { italic = false },
-        statementStyle = { bold = true },
-        typeStyle = {},
-        -- transparent = true,    -- do not set background color
-        dimInactive = false,   -- dim inactive window `:h hl-NormalNC`
-        terminalColors = true, -- define vim.g.terminal_color_{0,17}
-        overrides = function(colors)
-          local theme = colors.theme
-          return {
-            Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
-            PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
-            PmenuSbar = { bg = theme.ui.bg_m1 },
-            PmenuThumb = { bg = theme.ui.bg_p2 },
-          }
-        end,
-        colors = { -- add/modify theme and palette colors
-          palette = {},
-          theme = {
-            wave = {},
-            lotus = {},
-            dragon = {},
-            all = {
-              ui = {
-                bg_gutter = "none"
-              }
-            }
-          },
-        },
-        theme = "dragon",  -- Load "wave" theme when 'background' option is not set
-        background = {     -- map the value of 'background' option to a theme
-          dark = "dragon", -- try "dragon" !
-          light = "lotus"
-        },
-      })
 
-      -- setup must be called before loading
-      vim.cmd [[colorscheme kanagawa]]
-    end,
-  },
-  --
+  -- KANAGAWA
+  -- {
+  --   "rebelot/kanagawa.nvim",
+  --   priority = 1000,
+  --   lazy = false,
+  --   opts = {
+  --     transparent = true,
+  --     -- overrides = function(colors)
+  --     --   local theme = colors.theme
+  --     --   return {
+  --     --     Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
+  --     --     PmenuSel = { fg = "NONE", bg = theme.ui.bg_p2 },
+  --     --     PmenuSbar = { bg = theme.ui.bg_m1 },
+  --     --     PmenuThumb = { bg = theme.ui.bg_p2 },
+  --     --   }
+  --     -- end,
+  --     colors = { -- add/modify theme and palette colors
+  --       palette = {},
+  --       theme = {
+  --         wave = {},
+  --         lotus = {},
+  --         dragon = {},
+  --         all = {
+  --           ui = {
+  --             bg_gutter = "none"
+  --           }
+  --         }
+  --       },
+  --     },
+  --   },
+  --   init = function()
+  --     vim.cmd [[colorscheme kanagawa-dragon]]
+  --   end
+  -- },
+
   -- AYU
   -- {
   --   "Shatur/neovim-ayu",
   --   priority = 1000,
   --   lazy = false,
   --   init = function()
+  --     require('ayu').setup({
+  --       overrides = {
+  --         Normal = { bg = "None" },
+  --         ColorColumn = { bg = "None" },
+  --         SignColumn = { bg = "None" },
+  --         Folded = { bg = "None" },
+  --         FoldColumn = { bg = "None" },
+  --         CursorLine = { bg = "None" },
+  --         CursorColumn = { bg = "None" },
+  --         WhichKeyFloat = { bg = "None" },
+  --         VertSplit = { bg = "None" },
+  --       },
+  --     })
   --     vim.cmd("colorscheme ayu")
   --   end,
   -- },
@@ -98,39 +96,77 @@ require("lazy").setup({
   --   end,
   -- },
 
-  -- GRUVBOX MATERIAL
+  -- BASE 16
   -- {
-  --   'sainnhe/gruvbox-material',
+  --   "RRethy/nvim-base16",
+  --   priority = 1000,
+  --   lazy = false,
+  --   -- init = function()
+  --   --   vim.cmd [[colorscheme melange]]
+  --   -- end,
+  -- },
+
+  -- MALANGE
+  -- {
+  --   "savq/melange-nvim",
   --   priority = 1000,
   --   lazy = false,
   --   init = function()
-  --     vim.g.gruvbox_material_disable_italic_comment = 1
-  --     vim.g.gruvbox_material_diagnostic_text_highlight = 1
-  --     vim.g.gruvbox_material_diagnostic_line_highlight = 1
-  --     vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
-  --     vim.g.gruvbox_material_transparent_background = 1
-  --     -- vim.g.gruvbox_material_background = 'hard'
-  --     vim.g.gruvbox_material_foreground = 'original'
-  --     -- vim.g.gruvbox_material_dim_inactive_windows = 1
-  --     vim.cmd("colorscheme gruvbox-material")
+  --     vim.cmd [[colorscheme melange]]
   --   end,
   -- },
   --
+  -- EDGE
+  -- {
+  --   'sainnhe/edge',
+  --   priority = 1000,
+  --   lazy = false,
+  --   init = function()
+  --     -- vim.g.edge_disable_italic_comment = 1
+  --     vim.g.edge_diagnostic_text_highlight = 1
+  --     vim.g.edge_diagnostic_line_highlight = 1
+  --     vim.g.edge_diagnostic_virtual_text = 'colored'
+  --     -- vim.g.edge_transparent_background = 1
+  --     -- vim.g.edge_background = 'hard'
+  --     -- vim.g.edge_foreground = 'original'
+  --     -- vim.g.gruvbox_material_dim_inactive_windows = 1
+  --     vim.cmd [[colorscheme edge]]
+  --   end,
+  -- },
+
+  -- GRUVBOX MATERIAL
+  {
+    'sainnhe/gruvbox-material',
+    priority = 1000,
+    lazy = false,
+    init = function()
+      vim.g.gruvbox_material_disable_italic_comment = 1
+      vim.g.gruvbox_material_diagnostic_text_highlight = 1
+      vim.g.gruvbox_material_diagnostic_line_highlight = 1
+      vim.g.gruvbox_material_diagnostic_virtual_text = 'colored'
+      -- vim.g.gruvbox_material_transparent_background = 1
+      vim.g.gruvbox_material_background = 'hard'
+      -- vim.g.gruvbox_material_foreground = 'original'
+      -- vim.g.gruvbox_material_dim_inactive_windows = 1
+      vim.cmd [[colorscheme gruvbox-material]]
+    end,
+  },
+
   -- GRUBER DARKER
   -- {
-  --     "blazkowolf/gruber-darker.nvim",
-  --     priority = 1000,
-  --     opts = {
-  --         italic = {
-  --             strings = false,
-  --             comments = false,
-  --             operators = false,
-  --             folds = false,
-  --         },
+  --   "blazkowolf/gruber-darker.nvim",
+  --   priority = 1000,
+  --   opts = {
+  --     italic = {
+  --       strings = false,
+  --       comments = false,
+  --       operators = false,
+  --       folds = false,
   --     },
-  --     init = function()
-  --         vim.cmd("colorscheme gruber-darker") -- vim.cmd.colorscheme('gruvbox')
-  --     end,
+  --   },
+  --   init = function()
+  --     vim.cmd [[colorscheme gruber-darker]]
+  --   end,
   -- },
 
   -- GRUVBOX
@@ -151,20 +187,18 @@ require("lazy").setup({
   --   'rose-pine/neovim',
   --   name = 'rose-pine',
   --   priority = 1000,
-  --   -- lazy = false,
+  --   lazy = false,
   --   init = function()
   --     require('rose-pine').setup({
   --       disable_background = true,
-  --       -- disable_float_background = true,
+  --       disable_float_background = true,
   --       disable_italics = true, -- Force no italics
-  --       groups = {
-  --         panel = "Highlight Med"
-  --       }
+  --       -- groups = {
+  --       --   panel = "Highlight Med"
+  --       -- }
   --     })
-  --     vim.cmd("colorscheme rose-pine")
+  --     vim.cmd [[colorscheme rose-pine]]
   --
-  --     vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-  --     vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
   --     -- vim.o.background = "dark"
   --   end,
   -- },
@@ -175,19 +209,8 @@ require("lazy").setup({
   --   lazy = false,
   --   priority = 1000,
   --   opts = {
-  --     style = "night", -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
-  --     -- transparent = true, -- Enable this to disable setting the background color
-  --     styles = {
-  --       -- Style to be applied to different syntax groups
-  --       -- Value is any valid attr-list value for `:help nvim_set_hl`
-  --       comments = { italic = false },
-  --       keywords = { italic = false },
-  --       functions = { italic = false },
-  --       variables = { italic = false },
-  --       -- Background styles. Can be "dark", "transparent" or "normal"
-  --       sidebars = "dark", -- style for sidebars, see below
-  --       floats = "dark",   -- style for floating windows
-  --     },
+  --     style = "night",    -- The theme comes in three styles, `storm`, `moon`, a darker variant `night` and `day`
+  --     transparent = true, -- Enable this to disable setting the background color
   --   },
   --   init = function()
   --     vim.cmd [[colorscheme tokyonight]]
@@ -224,7 +247,6 @@ require("lazy").setup({
   {
     'nvim-telescope/telescope.nvim',
     tag = '0.1.2',
-    -- or                              , branch = '0.1.1',
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       local builtin = require('telescope.builtin')
@@ -351,7 +373,13 @@ require("lazy").setup({
 
   "mbbill/undotree",
   -- "tpope/vim-fugitive",
-  "nvim-treesitter/nvim-treesitter-context",
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    opts = {
+      max_lines = 1,
+      trim_scope = 'inner'
+    }
+  },
 
   -- LSP ZERO
   {
@@ -513,6 +541,11 @@ vim.opt.scrolloff = 8
 vim.opt.signcolumn = "yes"
 vim.opt.isfname:append("@-@")
 
+-- Separatori .
+-- vim.opt.list = true
+-- vim.opt.listchars:append "space:⋅"
+-- vim.opt.listchars:append "eol:↴"
+
 vim.opt.updatetime = 50
 
 vim.opt.colorcolumn = "80"
@@ -526,12 +559,12 @@ vim.opt.colorcolumn = "80"
 vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 
 -- TREESITTER CONTEXT
-vim.cmd [[
-    augroup tony_colorcolumn
-        autocmd!
-        autocmd BufEnter * highlight TreesitterContextBottom ctermbg=235 guibg=#363636
-    augroup END
-]]
+-- vim.cmd [[
+--     augroup tony_colorcolumn
+--         autocmd!
+--         autocmd BufEnter * highlight TreesitterContextBottom ctermbg=235 guibg=#363636
+--     augroup END
+-- ]]
 vim.keymap.set("n", "[c", function()
   require("treesitter-context").go_to_context()
 end, { silent = true })
@@ -705,3 +738,13 @@ cmp_mappings['<S-Tab>'] = nil
 lsp.setup_nvim_cmp({
   mapping = cmp_mappings,
 })
+
+-- Theme based on time
+-- local time = os.date("*t")
+-- if time.hour < 8 or time.hour > 19 then
+--   -- vim.cmd([[colorscheme tokyonight]])
+--   vim.o.background = "dark"
+-- else
+--   -- vim.cmd([[colorscheme gruvbox]])
+--   vim.o.background = "light"
+-- end
